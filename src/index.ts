@@ -4,6 +4,7 @@ import { ApolloServer } from "apollo-server-express";
 import cors from "cors";
 import resolvers from "./graphql/resolvers";
 import typeDefs from "./graphql/schemas";
+import { Request, Response } from "express";
 
 const app: Application = express();
 const PORT = 5000;
@@ -18,6 +19,10 @@ app.use(
 
 // Required middleware for Apollo
 app.use(express.json());
+
+app.get("/", (req: Request, res: Response) => {
+  res.send("Hello World");
+});
 
 // Create Apollo Server
 async function startServer() {
