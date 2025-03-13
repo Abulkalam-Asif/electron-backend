@@ -7,7 +7,7 @@ import typeDefs from "./graphql/schemas";
 import { Request, Response } from "express";
 
 const app: Application = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 // Enable CORS for Electron
 app.use(
@@ -31,8 +31,8 @@ async function startServer() {
     resolvers,
   });
 
-  await server.start();
-  server.applyMiddleware({ app: app as any, path: "/graphql" });
+  await server.start(); // Ensure Apollo Server is started before applying middleware
+  server.applyMiddleware({ app, path: "/graphql" });
 
   app.listen(PORT, () => {
     console.log(`🚀 Server ready at http://localhost:${PORT}/graphql`);
