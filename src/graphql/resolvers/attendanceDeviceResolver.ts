@@ -138,26 +138,40 @@ const attendanceDeviceResolver = {
     ) => {
       try {
         const attendanceDeviceDocRef = doc(firestore, "ATTENDANCE_DEVICES", id);
+        const locationRef = doc(firestore, "LOCATIONS", locationId);
         await updateDoc(attendanceDeviceDocRef, {
           name,
           ip,
           port,
           serialNumber,
-          locationRef: locationId,
+          locationRef,
         });
+        return {
+          success: true,
+          message: "Attendance Device updated successfully",
+        };
       } catch (e) {
-        console.error("Error editing an attendance device: ", e);
-        return false;
+        console.error("Error updating an attendance device: ", e);
+        return {
+          success: false,
+          message: "Failed to update attendance device",
+        };
       }
     },
     deleteAttendanceDevice: async (_: any, { id }: { id: string }) => {
       try {
         const attendanceDeviceDocRef = doc(firestore, "ATTENDANCE_DEVICES", id);
         await deleteDoc(attendanceDeviceDocRef);
-        return true;
+        return {
+          success: true,
+          message: "Attendance Device deleted successfully",
+        };
       } catch (e) {
         console.error("Error deleting an attendance device: ", e);
-        return false;
+        return {
+          success: false,
+          message: "Failed to delete attendance device",
+        };
       }
     },
   },

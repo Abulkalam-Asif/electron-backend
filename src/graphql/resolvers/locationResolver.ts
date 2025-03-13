@@ -6,6 +6,8 @@ import {
   updateDoc,
   deleteDoc,
   getDoc,
+  query,
+  where,
 } from "@firebase/firestore";
 import { firestore } from "../../firebaseConfig";
 import { LocationWithIdType } from "../../types";
@@ -96,6 +98,24 @@ const locationResolver = {
     },
     deleteLocation: async (_: any, { id }: { id: string }) => {
       try {
+        const attendanceDevicesCollectionRef = collection(
+          firestore,
+          "ATTENDANCE_DEVICES"
+        );
+        const q = query(
+          attendanceDevicesCollectionRef,
+          where("locationRef", "==", doc(firestore, "LOCATIONS", id))
+        );
+        const attendanceDevicesSnapshot = await getDocs(q);
+
+        if (!attendanceDevicesSnapshot.empty) {
+          return {
+            success: false,
+            message:
+              "Location cannot be deleted as it is being used by one or more attendance devices",
+          };
+        }
+
         const locationDocRef = doc(firestore, "LOCATIONS", id);
         await deleteDoc(locationDocRef);
         return {
