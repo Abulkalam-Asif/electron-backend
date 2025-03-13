@@ -12,7 +12,7 @@ import { AttendanceDeviceWithLocationType } from "../../types";
 
 const attendanceDeviceResolver = {
   Query: {
-    getAttendanceDevices: async () => {
+    getAllAttendanceDevices: async () => {
       try {
         const attendanceDevicesCollectionRef = collection(
           firestore,
@@ -52,7 +52,7 @@ const attendanceDeviceResolver = {
     },
   },
   Mutation: {
-    addAttendanceDevice: async (
+    addNewAttendanceDevice: async (
       _: any,
       {
         name,
@@ -74,17 +74,48 @@ const attendanceDeviceResolver = {
           "ATTENDANCE_DEVICES"
         );
         const locationRef = doc(firestore, "LOCATIONS", locationId);
-        await addDoc(attendanceDevicesCollectionRef, {
+
+        const newAttendanceDeviceDocRef = await addDoc(
+          attendanceDevicesCollectionRef,
+          {
+            name,
+            ip,
+            port,
+            serialNumber,
+            locationRef,
+          }
+        );
+        const locationData = await getLocationData(locationId);
+        if (!locationData) {
+          return {
+            success: false,
+            message: "An error occured. Please refresh and try again.",
+          };
+        }
+        const newAttendanceDevice = {
+          id: newAttendanceDeviceDocRef.id,
           name,
           ip,
           port,
           serialNumber,
-          locationRef,
-        });
-        return true;
+          locationRef: {
+            id: locationId,
+            name: locationData.name,
+            description: locationData.description,
+            pin: locationData.pin,
+          },
+        };
+        return {
+          success: true,
+          message: "Attendance Device added successfully",
+          attendanceDevice: newAttendanceDevice,
+        };
       } catch (e) {
         console.error("Error creating a new attendance device: ", e);
-        return false;
+        return {
+          success: false,
+          message: "Failed to add attendance device",
+        };
       }
     },
     editAttendanceDevice: async (
@@ -114,7 +145,6 @@ const attendanceDeviceResolver = {
           serialNumber,
           locationRef: locationId,
         });
-        return true;
       } catch (e) {
         console.error("Error editing an attendance device: ", e);
         return false;

@@ -1,4 +1,4 @@
-import attendanceDeviceResolver from "./attendanceDevice";
+import attendanceDeviceResolver from "./attendanceDeviceResolver";
 import locationResolver from "./locationResolver";
 import userResolver from "./userResolver";
 

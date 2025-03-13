@@ -10,18 +10,25 @@ export const attendanceDeviceTypeDefs = gql`
     locationRef: Location!
   }
 
+  type MutationResponse {
+    success: Boolean!
+    message: String
+    attendanceDevice: AttendanceDevice
+  }
+
   type Query {
-    getAttendanceDevices: [AttendanceDevice]
+    getAllAttendanceDevices: [AttendanceDevice]
   }
 
   type Mutation {
-    addAttendanceDevice(
+    addNewAttendanceDevice(
       name: String!
       ip: String!
       port: String!
       serialNumber: String!
       locationId: ID!
-    ): AttendanceDevice
+    ): MutationResponse
+
     editAttendanceDevice(
       id: ID!
       name: String!
@@ -29,7 +36,8 @@ export const attendanceDeviceTypeDefs = gql`
       port: String!
       serialNumber: String!
       locationId: ID!
-    ): AttendanceDevice
-    deleteAttendanceDevice(id: ID!): Boolean
+    ): MutationResponse
+
+    deleteAttendanceDevice(id: ID!): MutationResponse
   }
 `;
