@@ -30,7 +30,7 @@ export type AttendanceDeviceWithLocationType = {
 };
 
 export type SettingsType = {
-  ipOrDomain: string;
+  ip: string;
   port: string;
   apiKey: string;
 };
