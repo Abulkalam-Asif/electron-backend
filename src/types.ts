@@ -9,11 +9,24 @@ export type LocationWithIdType = LocationType & {
 };
 
 export type AttendanceDeviceType = {
-  deviceName: string;
-  ipAddress: string;
+  name: string;
+  ip: string;
   port: string;
   serialNumber: string;
   locationRef: string;
+};
+
+export type AttendanceDeviceWithIdType = AttendanceDeviceType & {
+  id: string;
+};
+
+export type AttendanceDeviceWithLocationType = {
+  id: string;
+  name: string;
+  ip: string;
+  port: string;
+  serialNumber: string;
+  locationRef: LocationWithIdType;
 };
 
 export type SettingsType = {
