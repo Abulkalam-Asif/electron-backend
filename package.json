@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "main": "index.ts",
   "scripts": {
-    "postinstall": "npx npm-force-resolutions",
     "dev": "nodemon src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js"
@@ -14,9 +13,6 @@
   "author": "",
   "license": "ISC",
   "description": "",
-  "resolutions": {
-    "@types/express": "4.17.13"
-  },
   "dependencies": {
     "@firebase/auth": "^1.9.1",
     "@firebase/firestore": "^4.7.9",
