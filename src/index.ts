@@ -32,7 +32,7 @@ async function startServer() {
   });
 
   await server.start(); // Ensure Apollo Server is started before applying middleware
-  server.applyMiddleware({ app, path: "/graphql" });
+  server.applyMiddleware({ app: app as any, path: "/graphql" });
 
   app.listen(PORT, () => {
     console.log(`🚀 Server ready at http://localhost:${PORT}/graphql`);
