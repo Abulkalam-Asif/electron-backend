@@ -1,9 +1,8 @@
 export const signJwt = async (username: string) => {
-	// Import jose dynamically using a separate variable to ensure proper resolution
-	const joseModule = await import("jose");
-	const jose = joseModule.default || joseModule;
+	// Import specific components from jose using named imports
+	const { SignJWT } = await import("jose");
 
-	const token = new jose.SignJWT({
+	const token = new SignJWT({
 		username,
 	})
 		.setProtectedHeader({ alg: "HS256" })
