@@ -4,8 +4,10 @@ export const userTypeDefs = gql`
 	type User {
 		id: ID!
 		name: String!
+		email: String!
 		username: String!
 		password: String!
+		isActive: Boolean!
 	}
 
 	type UserResponse {
@@ -16,12 +18,19 @@ export const userTypeDefs = gql`
 	}
 
 	type Query {
-		_empty: String
+		getAllUsers: [User]
 	}
 
 	type Mutation {
 		loginUser(username: String!, password: String!): String
+		createUser(
+			name: String!
+			email: String!
+			username: String!
+			password: String!
+		): UserResponse
 		updateUser(username: String!, password: String!): UserResponse
+		deactivateUser(id: ID!): UserResponse
 		verifyToken(token: String!): Boolean
 	}
 `;
