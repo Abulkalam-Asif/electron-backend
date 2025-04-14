@@ -1,6 +1,7 @@
 export const signJwt = async (username: string) => {
-	// Import jose dynamically
-	const jose = await import("jose");
+	// Import jose dynamically using a separate variable to ensure proper resolution
+	const joseModule = await import("jose");
+	const jose = joseModule.default || joseModule;
 
 	const token = new jose.SignJWT({
 		username,

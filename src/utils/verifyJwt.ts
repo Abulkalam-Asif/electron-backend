@@ -1,8 +1,9 @@
 // Using dynamic import for ESM compatibility
 
 export const verifyJwt = async (token: string) => {
-	// Import jose dynamically
-	const jose = await import("jose");
+	// Import jose dynamically using a separate variable to ensure proper resolution
+	const joseModule = await import("jose");
+	const jose = joseModule.default || joseModule;
 
 	const secret = process.env.JWT_SECRET;
 	if (!secret) throw new Error("JWT secret is not defined");
