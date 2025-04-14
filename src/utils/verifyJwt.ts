@@ -1,13 +1,11 @@
-// Using dynamic import for ESM compatibility
+import jwt from "jsonwebtoken";
 
-export const verifyJwt = async (token: string) => {
-	// Import specific components from jose using named imports
-	const { jwtVerify } = await import("jose");
-
+export const verifyJwt = (token: string) => {
 	const secret = process.env.JWT_SECRET;
 	if (!secret) throw new Error("JWT secret is not defined");
+
 	try {
-		await jwtVerify(token, new TextEncoder().encode(secret), {
+		jwt.verify(token, secret, {
 			algorithms: ["HS256"],
 		});
 		return true;
