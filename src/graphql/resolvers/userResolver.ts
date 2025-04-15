@@ -98,7 +98,12 @@ const userResolver = {
 		},
 		updateUser: async (
 			_: any,
-			{ username, password }: { username: string; password: string },
+			{
+				username,
+				name,
+				email,
+				password,
+			}: { username: string; name?: string; email?: string; password?: string },
 			context: any
 		) => {
 			try {
@@ -110,23 +115,31 @@ const userResolver = {
 				}
 
 				const user = userDoc.data();
+				const updates: Record<string, any> = {};
+
+				// Only update fields that are provided
+				if (name) updates.name = name;
+				if (email) updates.email = email;
 
 				if (password) {
 					const hashedPassword = await bcrypt.hash(password, 10);
-					await setDoc(userRef, { ...user, password: hashedPassword });
+					updates.password = hashedPassword;
+				}
+
+				// Only update if there are changes
+				if (Object.keys(updates).length > 0) {
+					await updateDoc(userRef, updates);
 				}
 
 				return {
 					id: username,
 					username,
 					success: true,
-					message: "Password updated successfully",
+					message: "User updated successfully",
 				};
 			} catch (error) {
-				console.error("Error updating password:", error);
-				throw new Error(
-					"Failed to update password: " + (error as Error).message
-				);
+				console.error("Error updating user:", error);
+				throw new Error("Failed to update user: " + (error as Error).message);
 			}
 		},
 		deactivateUser: async (_: any, { id }: { id: string }) => {
@@ -137,6 +150,16 @@ const userResolver = {
 			} catch (error) {
 				console.error("Error deactivating user:", error);
 				throw new Error("Failed to deactivate user");
+			}
+		},
+		activateUser: async (_: any, { id }: { id: string }) => {
+			try {
+				const userRef = doc(firestore, "USERS", id);
+				await updateDoc(userRef, { isActive: true });
+				return { id, success: true, message: "User activated successfully" };
+			} catch (error) {
+				console.error("Error activating user:", error);
+				throw new Error("Failed to activate user");
 			}
 		},
 		verifyToken: async (_: any, { token }: { token: string }) => {

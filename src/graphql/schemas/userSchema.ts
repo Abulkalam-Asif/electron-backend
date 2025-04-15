@@ -29,8 +29,14 @@ export const userTypeDefs = gql`
 			username: String!
 			password: String!
 		): UserResponse
-		updateUser(username: String!, password: String!): UserResponse
+		updateUser(
+			username: String!
+			name: String
+			email: String
+			password: String
+		): UserResponse
 		deactivateUser(id: ID!): UserResponse
+		activateUser(id: ID!): UserResponse
 		verifyToken(token: String!): Boolean
 	}
 `;
